@@ -11,6 +11,7 @@ body {
   width: 100vw;
   justify-content: center;
   align-items: center;
+  font-size: 15vmin;
 }
 
 #interfaceDiv {
@@ -24,7 +25,7 @@ body {
 }
 
 #canvas {
-  background-color: hsl(0, 0%, 0%);
+  background-color: hsl(0, 0%, 100%);
   position: absolute;
   width: 100vw;
   height: 100vh;
