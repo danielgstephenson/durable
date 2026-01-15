@@ -4,6 +4,7 @@ import { Server as SocketIoServer } from 'socket.io'
 export class Messenger {
   server: Server
   io: SocketIoServer
+  token = Math.random()
 
   constructor(server: Server) {
     this.io = new SocketIoServer(server.httpServer)
@@ -15,6 +16,7 @@ export class Messenger {
   setupIo(): void {
     this.io.on('connection', socket => {
       console.log(socket.id, 'connected')
+      socket.emit('token', this.token)
     })
   }
 
