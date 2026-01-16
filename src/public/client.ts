@@ -1,11 +1,20 @@
 import { io } from 'socket.io-client'
 
 export class Client {
+  loginButton: HTMLButtonElement
+  idInput: HTMLInputElement
   socket = io()
   token = 0
 
   constructor() {
     console.log('client')
+    this.setupIo()
+    this.loginButton = document.getElementById('loginButton') as HTMLButtonElement
+    this.idInput = document.getElementById('idInput') as HTMLInputElement
+    this.loginButton.onclick = () => { this.login() }
+  }
+
+  setupIo(): void {
     this.socket.on('connect', () => {
       console.log('connect')
     })
@@ -19,5 +28,11 @@ export class Client {
       }
       this.token = token
     })
+  }
+
+  login(): void {
+    const id = this.idInput.value
+    console.log('login', id)
+    this.socket.emit('login', id)
   }
 }

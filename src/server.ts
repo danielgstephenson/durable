@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 import path from 'path'
 import { Config } from './config'
 import { Messenger } from './messenger'
+
 export class Server {
   config: Config
   app: Express

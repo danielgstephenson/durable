@@ -1,6 +1,7 @@
 import { Server } from './server'
 import { Server as SocketIoServer } from 'socket.io'
 
+
 export class Messenger {
   server: Server
   io: SocketIoServer
