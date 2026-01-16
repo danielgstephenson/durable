@@ -4,7 +4,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build:server": "npx tsc -build ./src",
-    "build:client": "npx parcel build ./src/public/client.html --dist-dir \"dist/public\"",
+    "build:client": "npx parcel build ./src/public/client/index.html --dist-dir \"dist/public/client\"",
     "build": "npm run prebuild && npm run build:server && npm run build:client",
     "start": "node ./dist",
     "dev": "npm run build && npm run start"

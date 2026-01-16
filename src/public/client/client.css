@@ -1,0 +1,44 @@
+body {
+  background-color: hsl(0, 0%, 100%);
+  margin: 0;
+  overflow: hidden;
+}
+
+#loginDiv {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  font-size: 15vmin;
+}
+
+#idInput {
+  font-size: 15vmin;
+  text-align: center;
+}
+
+#loginButton {
+  font-size: 10vmin;
+  padding: 2vmin;
+  margin: 3vmin;
+  border-radius: 2vmin;
+}
+
+#interfaceDiv {
+  display: none;
+  /* display: flex; */
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  background-color: hsl(0, 0%, 100%);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
