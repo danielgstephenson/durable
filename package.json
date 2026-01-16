@@ -4,8 +4,9 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build:server": "npx tsc -build ./src",
-    "build:client": "npx parcel build ./src/public/client/index.html --dist-dir \"dist/public/client\"",
-    "build": "npm run prebuild && npm run build:server && npm run build:client",
+    "build:client": "npx parcel build ./src/public/index.html --dist-dir \"dist/public\" --public-url ./",
+    "build:manager": "npx parcel build ./src/public/manager/index.html --dist-dir \"dist/public/manager\" --public-url ./",
+    "build": "npm run prebuild && npm run build:server && npm run build:client && npm run build:manager",
     "start": "node ./dist",
     "dev": "npm run build && npm run start"
   },
