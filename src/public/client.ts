@@ -1,12 +1,20 @@
 import { io } from 'socket.io-client'
+import { Subject } from '../subject'
+import { Summary } from '../experiment'
 
 export class Client {
+  connectDiv: HTMLDivElement
+  instructionDiv: HTMLDivElement
+  canvasDiv: HTMLDivElement
+  subjects = new Map<string, Subject>()
   socket = io()
   token = 0
   id = ''
 
   constructor() {
-    console.log('client')
+    this.connectDiv = document.getElementById('connectDiv') as HTMLDivElement
+    this.instructionDiv = document.getElementById('instructionDiv') as HTMLDivElement
+    this.canvasDiv = document.getElementById('canvasDiv') as HTMLDivElement
     this.setupIo()
     this.handleUrlParams()
   }
@@ -23,16 +31,23 @@ export class Client {
       }
       this.token = token
     })
+    this.socket.on('login', (id: string) => {
+      console.log('login', id)
+      this.id = id
+      this.connectDiv.style.display = 'none'
+      this.instructionDiv.style.display = 'flex'
+    })
+    this.socket.on('summary', (summary: Summary) => {
+      this.subjects = new Map<string, Subject>(summary.subjects)
+    })
   }
 
   handleUrlParams(): void {
-    console.log('handleUrlParams')
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const id = urlParams.get('id')
-    console.log('id', id)
     if (id === null || id === '') {
-      throw new Error('Missing query parameter: id')
+      this.connectDiv.innerHTML = 'Missing Query Parameter: id'
     }
     this.socket.emit('login', id)
   }

@@ -4,18 +4,18 @@ export class Experiment {
   subjects = new Map<string, Subject>()
 
   login(id: string): void {
-    const subject = new Subject(id)
-    this.subjects.set(id, subject)
     console.log('login', id)
+    if (this.subjects.has(id)) return
+    this.subjects.set(id, new Subject(id))
   }
 
   summarize(): Summary {
     return {
-      subjectEntries: [...this.subjects.entries()]
+      subjects: [...this.subjects.entries()]
     }
   }
 }
 
-type Summary = {
-  subjectEntries: [string, Subject][]
+export type Summary = {
+  subjects: [string, Subject][]
 }
