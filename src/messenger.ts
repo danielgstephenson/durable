@@ -1,3 +1,4 @@
+import { Experiment } from './experiment'
 import { Server } from './server'
 import { Server as SocketIoServer } from 'socket.io'
 
@@ -6,6 +7,7 @@ export class Messenger {
   server: Server
   io: SocketIoServer
   token = Math.random()
+  experiment = new Experiment()
 
   constructor(server: Server) {
     this.io = new SocketIoServer(server.httpServer)
@@ -18,10 +20,15 @@ export class Messenger {
     this.io.on('connection', socket => {
       console.log(socket.id, 'connected')
       socket.emit('token', this.token)
+      socket.on('login', (id: string) => {
+        this.experiment.login(id)
+        socket.emit('login', id)
+      })
     })
   }
 
   update(): void {
-    this.io.emit('summary')
+    const summary = this.experiment.summarize()
+    this.io.emit('summary', summary)
   }
 }

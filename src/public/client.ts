@@ -1,17 +1,14 @@
 import { io } from 'socket.io-client'
 
 export class Client {
-  loginButton: HTMLButtonElement
-  idInput: HTMLInputElement
   socket = io()
   token = 0
+  id = ''
 
   constructor() {
     console.log('client')
     this.setupIo()
-    this.loginButton = document.getElementById('loginButton') as HTMLButtonElement
-    this.idInput = document.getElementById('idInput') as HTMLInputElement
-    this.loginButton.onclick = () => { this.login() }
+    this.handleUrlParams()
   }
 
   setupIo(): void {
@@ -19,8 +16,6 @@ export class Client {
       console.log('connect')
     })
     this.socket.on('token', (token: number) => {
-      console.log('this.token', this.token)
-      console.log('token', token)
       if (this.token !== 0 && this.token !== token) {
         console.log('reload')
         location.reload()
@@ -30,9 +25,15 @@ export class Client {
     })
   }
 
-  login(): void {
-    const id = this.idInput.value
-    console.log('login', id)
+  handleUrlParams(): void {
+    console.log('handleUrlParams')
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    const id = urlParams.get('id')
+    console.log('id', id)
+    if (id === null || id === '') {
+      throw new Error('Missing query parameter: id')
+    }
     this.socket.emit('login', id)
   }
 }

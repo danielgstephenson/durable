@@ -4,7 +4,7 @@ body {
   overflow: hidden;
 }
 
-#loginDiv {
+#waitDiv {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -12,18 +12,6 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 15vmin;
-}
-
-#idInput {
-  font-size: 15vmin;
-  text-align: center;
-}
-
-#loginButton {
-  font-size: 10vmin;
-  padding: 2vmin;
-  margin: 3vmin;
-  border-radius: 2vmin;
 }
 
 #interfaceDiv {
