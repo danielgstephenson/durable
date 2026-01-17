@@ -3,7 +3,7 @@ import { Renderer } from "./renderer"
 export class Graph {
   renderer: Renderer
   x = 12.5
-  y = 20
+  y = 23
   width = 75
   height = 75
 
@@ -14,9 +14,8 @@ export class Graph {
   draw(): void {
     this.renderer.resetContext()
     const context = this.renderer.context
-    context.lineWidth = 1
+    context.lineWidth = 0.5
     context.strokeStyle = 'black'
-    context.strokeRect(12.5, 20, 75, 75)
+    context.strokeRect(this.x, this.y, this.width, this.height)
   }
-
 }

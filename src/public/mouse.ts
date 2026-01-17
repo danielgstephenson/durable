@@ -8,6 +8,7 @@ export class Mouse {
 
   constructor(renderer: Renderer) {
     this.renderer = renderer
+    document.oncontextmenu = event => { event.preventDefault() }
     window.addEventListener('mousemove', (event: MouseEvent) => this.onmousemove(event))
   }
 
@@ -16,7 +17,6 @@ export class Mouse {
     const vmin = Math.min(window.innerWidth, window.innerHeight)
     this.x = 100 * (event.clientX - 0.5 * window.innerWidth) / vmin + 50
     this.y = 100 * (0.5 * window.innerHeight - event.clientY) / vmin + 50
-    console.log('mouse', this.x.toFixed(2), this.y.toFixed(2))
   }
 
   draw(): void {
@@ -25,7 +25,7 @@ export class Mouse {
     const context = this.renderer.context
     context.fillStyle = 'hsl(215, 100%, 50%)'
     context.beginPath()
-    context.arc(this.x, this.y, 5, 0, 2 * Math.PI)
+    context.arc(this.x, this.y, 2, 0, 2 * Math.PI)
     context.fill()
   }
 

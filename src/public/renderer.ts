@@ -1,11 +1,14 @@
+import { clamp } from "../math"
 import { Subject } from "../subject"
 import { Graph } from "./graph"
 import { Mouse } from "./mouse"
+import { ActionLine } from "./actionLine"
 
 export class Renderer {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   graph = new Graph(this)
+  actionLine = new ActionLine(this)
   mouse = new Mouse(this)
   subjects = new Map<string, Subject>()
   renderScale = 1
@@ -21,13 +24,17 @@ export class Renderer {
     window.requestAnimationFrame(() => this.draw())
     this.setupCanvas()
     this.graph.draw()
-    this.mouse.draw()
+    this.actionLine.draw()
   }
 
   setupCanvas(): void {
     this.canvas.width = window.innerWidth * this.renderScale
     this.canvas.height = window.innerHeight * this.renderScale
     // this.context.imageSmoothingEnabled = false
+  }
+
+  getAction(): number {
+    return clamp(0, 1, (this.mouse.x - this.graph.x) / this.graph.width)
   }
 
   resetContext(): void {

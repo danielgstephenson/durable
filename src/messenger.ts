@@ -20,13 +20,16 @@ export class Messenger {
     this.io.on('connection', socket => {
       console.log(socket.id, 'connected')
       socket.emit('token', this.token)
-      socket.on('login', (id: string) => {
-        this.experiment.login(id)
-        socket.emit('login', id)
-      })
       socket.on('start', () => {
         console.log('start')
         this.experiment.start()
+      })
+      socket.on('login', (id: string) => {
+        const subject = this.experiment.login(id)
+        socket.emit('login', id)
+        socket.on('action', (action: number) => {
+          subject.action = action
+        })
       })
     })
   }

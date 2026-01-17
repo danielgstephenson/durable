@@ -17,6 +17,7 @@ export class Client {
     this.canvasDiv = document.getElementById('canvasDiv') as HTMLDivElement
     this.setupIo()
     this.handleUrlParams()
+    setInterval(() => this.update(), 20)
   }
 
   setupIo(): void {
@@ -44,6 +45,11 @@ export class Client {
         this.canvasDiv.style.display = 'flex'
       }
     })
+  }
+
+  update(): void {
+    const action = this.renderer.getAction()
+    this.socket.emit('action', action)
   }
 
   handleUrlParams(): void {
