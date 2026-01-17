@@ -11,8 +11,9 @@ body {
   width: 100vw;
   justify-content: flex-start;
   align-items: flex-start;
-  font-size: 5vmin;
+  font-size: 4vmin;
   padding: 5vmin;
+  gap: 2vmin;
 }
 
 #clientDiv {
@@ -20,6 +21,17 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  font-size: 5vmin;
   user-select: none;
+}
+
+#actionDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  user-select: none;
+}
+
+button {
+  font-size: 4vmin;
 }

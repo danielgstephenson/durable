@@ -1,15 +1,15 @@
 import { io } from 'socket.io-client'
 import { Subject } from '../subject'
 import { Summary } from '../experiment'
+import { Renderer } from './renderer'
 
 export class Client {
   connectDiv: HTMLDivElement
   instructionDiv: HTMLDivElement
   canvasDiv: HTMLDivElement
-  subjects = new Map<string, Subject>()
+  renderer = new Renderer()
   socket = io()
   token = 0
-  id = ''
 
   constructor() {
     this.connectDiv = document.getElementById('connectDiv') as HTMLDivElement
@@ -33,12 +33,16 @@ export class Client {
     })
     this.socket.on('login', (id: string) => {
       console.log('login', id)
-      this.id = id
+      this.renderer.id = id
       this.connectDiv.style.display = 'none'
       this.instructionDiv.style.display = 'flex'
     })
     this.socket.on('summary', (summary: Summary) => {
-      this.subjects = new Map<string, Subject>(summary.subjects)
+      this.renderer.subjects = new Map<string, Subject>(summary.subjects)
+      if (summary.started) {
+        this.instructionDiv.style.display = 'none'
+        this.canvasDiv.style.display = 'flex'
+      }
     })
   }
 

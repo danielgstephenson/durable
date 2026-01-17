@@ -24,6 +24,10 @@ export class Messenger {
         this.experiment.login(id)
         socket.emit('login', id)
       })
+      socket.on('start', () => {
+        console.log('start')
+        this.experiment.start()
+      })
     })
   }
 

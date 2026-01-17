@@ -4,12 +4,15 @@ import { Summary } from '../../experiment'
 
 export class Manager {
   subjectDiv: HTMLDivElement
+  startButton: HTMLButtonElement
   subjects = new Map<string, Subject>()
   socket = io()
   token = 0
 
   constructor() {
     this.subjectDiv = document.getElementById('subjectDiv') as HTMLDivElement
+    this.startButton = document.getElementById('startButton') as HTMLButtonElement
+    this.startButton.onclick = () => { this.start() }
     this.setupIo()
   }
 
@@ -36,5 +39,9 @@ export class Manager {
       })
       this.subjectDiv.style.userSelect = 'none'
     })
+  }
+
+  start(): void {
+    this.socket.emit('start')
   }
 }
