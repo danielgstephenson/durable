@@ -3,7 +3,7 @@ import { Renderer } from "./renderer"
 export class ActionLine {
   renderer: Renderer
   x = 12.5
-  y = 15
+  y = 10
   width = 75
 
   constructor(renderer: Renderer) {
@@ -41,7 +41,6 @@ export class ActionLine {
     context.moveTo(x1, y1)
     context.lineTo(x2, y1)
     context.lineTo(x, y)
-    // context.arc(x, y, 2, 0, 2 * Math.PI)
     context.fill()
 
   }

@@ -3,10 +3,12 @@ import { Subject } from "../subject"
 import { Graph } from "./graph"
 import { Mouse } from "./mouse"
 import { ActionLine } from "./actionLine"
+import { Summary } from "../experiment"
 
 export class Renderer {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
+  summary: Summary
   graph = new Graph(this)
   actionLine = new ActionLine(this)
   mouse = new Mouse(this)
@@ -17,6 +19,15 @@ export class Renderer {
   constructor() {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
+    this.summary = {
+      subjects: [],
+      unitMax: 0,
+      depreciation: 0,
+      time: 0,
+      price: 0,
+      rent: 0,
+      started: false
+    }
     this.draw()
   }
 

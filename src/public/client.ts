@@ -40,6 +40,7 @@ export class Client {
     })
     this.socket.on('summary', (summary: Summary) => {
       this.renderer.subjects = new Map<string, Subject>(summary.subjects)
+      this.renderer.summary = summary
       if (summary.started) {
         this.instructionDiv.style.display = 'none'
         this.canvasDiv.style.display = 'flex'

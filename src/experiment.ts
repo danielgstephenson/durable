@@ -1,16 +1,23 @@
 import { Subject } from "./subject";
+import NanoTimer from 'nanotimer'
 
 export class Experiment {
+  timer = new NanoTimer()
   subjects = new Map<string, Subject>()
   started = false
-  assetMax = 10
+  unitMax = 10
   depreciation = 0.5
   time = 0
   dt = 0.001
   busy = false
+  price = 0
+  rent = 0
+  startTime = 0
 
-  constructor() {
-    setInterval(() => this.step(), 1000 * this.dt)
+  start(): void {
+    this.started = true
+    this.timer.setInterval(() => this.step(), '', `${this.dt}s`)
+    this.startTime = performance.now()
   }
 
   step(): void {
@@ -20,13 +27,17 @@ export class Experiment {
     }
     this.busy = true
     this.subjects.forEach(subject => {
-      subject.purchaseRate = subject.action * this.assetMax * this.depreciation
+      if (this.time <= 1) {
+        const realTime = (performance.now() - this.startTime) / 1000
+        console.log('realTime, time, units =', realTime.toFixed(3), this.time.toFixed(3), subject.units.toFixed(3))
+      }
+      subject.purchaseRate = subject.action * this.unitMax * this.depreciation
       subject.units *= 1 - this.dt * this.depreciation
       if (subject.cash < 0) {
         subject.cash = 0
         return
       }
-      subject.units += subject.purchaseRate
+      subject.units += this.dt * subject.purchaseRate
     })
     this.time += this.dt
     this.busy = false
@@ -43,13 +54,14 @@ export class Experiment {
     return newSubject
   }
 
-  start(): void {
-    this.started = true
-  }
-
   summarize(): Summary {
     return {
       subjects: [...this.subjects.entries()],
+      unitMax: this.unitMax,
+      depreciation: this.depreciation,
+      time: this.time,
+      price: this.price,
+      rent: this.rent,
       started: this.started
     }
   }
@@ -57,5 +69,10 @@ export class Experiment {
 
 export type Summary = {
   subjects: [string, Subject][]
+  unitMax: number
+  depreciation: number
+  time: number
+  price: number
+  rent: number
   started: boolean
 }

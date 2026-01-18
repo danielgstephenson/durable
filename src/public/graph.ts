@@ -17,5 +17,20 @@ export class Graph {
     context.lineWidth = 0.5
     context.strokeStyle = 'black'
     context.strokeRect(this.x, this.y, this.width, this.height)
+    this.drawSubjects()
+  }
+
+  drawSubjects(): void {
+    const context = this.renderer.context
+    const unitMax = this.renderer.summary.unitMax
+    context.lineWidth = 1
+    context.strokeStyle = 'hsl(120, 100%, 25%)'
+    this.renderer.subjects.forEach(subject => {
+      const x = this.x + subject.units / unitMax * this.width
+      const y = this.y + 0.5 * this.height
+      context.beginPath()
+      context.arc(x, y, 2, 0, 2 * Math.PI)
+      context.stroke()
+    })
   }
 }
