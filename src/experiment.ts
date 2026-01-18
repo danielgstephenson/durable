@@ -1,3 +1,4 @@
+import { sum } from "./math";
 import { Subject } from "./subject";
 import NanoTimer from 'nanotimer'
 
@@ -7,17 +8,19 @@ export class Experiment {
   started = false
   unitMax = 10
   depreciation = 0.5
+  priceBase = 0
+  priceSlope = 0.1
+  rentBase = 1
+  rentSlope = 0.1
   time = 0
   dt = 0.001
   busy = false
   price = 0
   rent = 0
-  startTime = 0
 
   start(): void {
     this.started = true
     this.timer.setInterval(() => this.step(), '', `${this.dt}s`)
-    this.startTime = performance.now()
   }
 
   step(): void {
@@ -25,19 +28,27 @@ export class Experiment {
       console.log('busy')
       return
     }
+    const subjects = [...this.subjects.values()]
+    // const cash = subjects.map(subject => subject.cash.toFixed(2))
+    // console.log('cash', cash)
     this.busy = true
-    this.subjects.forEach(subject => {
-      if (this.time <= 1) {
-        const realTime = (performance.now() - this.startTime) / 1000
-        console.log('realTime, time, units =', realTime.toFixed(3), this.time.toFixed(3), subject.units.toFixed(3))
-      }
-      subject.purchaseRate = subject.action * this.unitMax * this.depreciation
+    subjects.forEach(subject => {
       subject.units *= 1 - this.dt * this.depreciation
-      if (subject.cash < 0) {
-        subject.cash = 0
-        return
+      subject.purchaseRate = subject.action * this.unitMax * this.depreciation
+      if (subject.cash <= 0) {
+        subject.purchaseRate = 0
       }
       subject.units += this.dt * subject.purchaseRate
+    })
+    const totalPurchaseRate = sum(subjects.map(s => s.purchaseRate))
+    this.price = this.priceBase + this.priceSlope * totalPurchaseRate
+    const totalUnits = sum(subjects.map(s => s.units))
+    this.rent = this.rentBase - this.rentSlope * totalUnits
+    subjects.forEach(subject => {
+      const revenue = subject.units * this.rent
+      const cost = subject.purchaseRate * this.price
+      subject.profit = revenue - cost
+      subject.cash += this.dt * subject.profit
     })
     this.time += this.dt
     this.busy = false

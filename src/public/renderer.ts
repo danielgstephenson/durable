@@ -1,6 +1,6 @@
 import { clamp } from "../math"
 import { Subject } from "../subject"
-import { Graph } from "./graph"
+import { ProfitGraph } from "./profitGraph"
 import { Mouse } from "./mouse"
 import { ActionLine } from "./actionLine"
 import { Summary } from "../experiment"
@@ -9,7 +9,7 @@ export class Renderer {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   summary: Summary
-  graph = new Graph(this)
+  profitGraph = new ProfitGraph(this)
   actionLine = new ActionLine(this)
   mouse = new Mouse(this)
   subjects = new Map<string, Subject>()
@@ -34,7 +34,7 @@ export class Renderer {
   draw(): void {
     window.requestAnimationFrame(() => this.draw())
     this.setupCanvas()
-    this.graph.draw()
+    this.profitGraph.draw()
     this.actionLine.draw()
   }
 
@@ -45,7 +45,7 @@ export class Renderer {
   }
 
   getAction(): number {
-    return clamp(0, 1, (this.mouse.x - this.graph.x) / this.graph.width)
+    return clamp(0, 1, (this.mouse.x - this.profitGraph.x) / this.profitGraph.width)
   }
 
   resetContext(): void {

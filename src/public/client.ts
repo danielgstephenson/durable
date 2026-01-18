@@ -57,7 +57,7 @@ export class Client {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const id = urlParams.get('id')
-    if (id === null || id === '') {
+    if (id == null || id === '') {
       this.connectDiv.innerHTML = 'Missing Query Parameter: id'
     }
     this.socket.emit('login', id)

@@ -25,6 +25,7 @@ export class Messenger {
         this.experiment.start()
       })
       socket.on('login', (id: string) => {
+        if (id == null) return
         const subject = this.experiment.login(id)
         socket.emit('login', id)
         socket.on('action', (action: number) => {
