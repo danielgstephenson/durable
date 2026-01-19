@@ -2,7 +2,7 @@ import { io } from 'socket.io-client'
 import { Subject } from '../../subject'
 import { Summary } from '../../experiment'
 
-export class Manager {
+export class Admin {
   subjectDiv: HTMLDivElement
   startButton: HTMLButtonElement
   subjects = new Map<string, Subject>()
@@ -30,10 +30,12 @@ export class Manager {
     })
     this.socket.on('summary', (summary: Summary) => {
       this.subjects = new Map<string, Subject>(summary.subjects)
-      const ids = [...this.subjects.keys()].sort()
+      const ids = [...this.subjects.keys()]
+      ids.sort((a, b) => Number(a) - Number(b))
       this.subjectDiv.innerHTML = ''
       ids.forEach(key => {
         const row = document.createElement('div')
+        row.style.textAlign = 'right'
         row.innerHTML = key
         this.subjectDiv.appendChild(row)
       })

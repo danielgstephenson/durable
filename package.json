@@ -5,8 +5,8 @@
     "prebuild": "rimraf dist",
     "build:server": "npx tsc -build ./src",
     "build:client": "npx parcel build ./src/public/index.html --dist-dir \"dist/public\" --public-url ./",
-    "build:manager": "npx parcel build ./src/public/manager/index.html --dist-dir \"dist/public/manager\" --public-url ./",
-    "build": "npm run prebuild && npm run build:server && npm run build:client && npm run build:manager",
+    "build:admin": "npx parcel build ./src/public/admin/index.html --dist-dir \"dist/public/admin\" --public-url ./",
+    "build": "npm run prebuild && npm run build:server && npm run build:client && npm run build:admin",
     "start": "node ./dist",
     "dev": "npm run build && npm run start"
   },

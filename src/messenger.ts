@@ -26,7 +26,11 @@ export class Messenger {
       })
       socket.on('login', (id: string) => {
         if (id == null) return
-        const subject = this.experiment.login(id)
+        const subject = this.experiment.subjects.get(id)
+        if (subject == null) {
+          console.log(`invalid subject id: ${id}`)
+          return
+        }
         socket.emit('login', id)
         socket.on('action', (action: number) => {
           subject.action = action

@@ -1,10 +1,11 @@
 export class Subject {
   id: string
-  action = 0
+  action = Math.random()
   cash = 100
-  units = 10
+  units = 0
   purchaseRate = 0
   profit = 0
+  connected = false
 
   constructor(id: string) {
     this.id = id

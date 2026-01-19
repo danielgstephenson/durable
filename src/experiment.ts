@@ -1,4 +1,4 @@
-import { sum } from "./math";
+import { range, sum } from "./math";
 import { Subject } from "./subject";
 import NanoTimer from 'nanotimer'
 
@@ -6,17 +6,24 @@ export class Experiment {
   timer = new NanoTimer()
   subjects = new Map<string, Subject>()
   started = false
+  subjectCount = 5
   unitMax = 10
-  depreciation = 0.5
+  depreciation = 0.2
   priceBase = 0
   priceSlope = 0.1
-  rentBase = 1
+  rentBase = 3
   rentSlope = 0.1
   time = 0
   dt = 0.001
   busy = false
   price = 0
   rent = 0
+
+  constructor() {
+    range(1, this.subjectCount).forEach(i => {
+      this.addSubject(`${i}`)
+    })
+  }
 
   start(): void {
     this.started = true
@@ -31,13 +38,15 @@ export class Experiment {
     const subjects = [...this.subjects.values()]
     // const cash = subjects.map(subject => subject.cash.toFixed(2))
     // console.log('cash', cash)
+    subjects.forEach(subject => {
+      if (subject.id === '1') return
+      if (Math.random() > 0.2 * this.dt) return
+      subject.action = Math.random()
+    })
     this.busy = true
     subjects.forEach(subject => {
       subject.units *= 1 - this.dt * this.depreciation
       subject.purchaseRate = subject.action * this.unitMax * this.depreciation
-      if (subject.cash <= 0) {
-        subject.purchaseRate = 0
-      }
       subject.units += this.dt * subject.purchaseRate
     })
     const totalPurchaseRate = sum(subjects.map(s => s.purchaseRate))
@@ -54,15 +63,11 @@ export class Experiment {
     this.busy = false
   }
 
-  login(id: string): Subject {
-    console.log('login', id)
-    const oldSubject = this.subjects.get(id)
-    if (oldSubject != null) {
-      return oldSubject
-    }
-    const newSubject = new Subject(id)
-    this.subjects.set(id, newSubject)
-    return newSubject
+  addSubject(id: string): Subject {
+    console.log('addSubject', id)
+    const subject = new Subject(id)
+    this.subjects.set(id, subject)
+    return subject
   }
 
   summarize(): Summary {

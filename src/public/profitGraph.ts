@@ -12,12 +12,18 @@ export class ProfitGraph {
   profitMin = 0
   profitMax = 1
   profitRange = 1
+  padding = 1
 
   constructor(renderer: Renderer) {
     this.renderer = renderer
   }
 
   draw(): void {
+    const subjects = [...this.renderer.subjects.values()]
+    const profits = subjects.map(s => s.profit)
+    this.profitMin = Math.min(-5, ...profits) - this.padding
+    this.profitMax = Math.max(5, ...profits) + this.padding
+    this.profitRange = this.profitMax - this.profitMin
     this.renderer.resetContext()
     const context = this.renderer.context
     context.lineWidth = 0.5
@@ -73,17 +79,11 @@ export class ProfitGraph {
   }
 
   drawTicksY(): void {
-    const subjects = [...this.renderer.subjects.values()]
-    const profits = subjects.map(s => s.profit)
-    const padding = 1
-    this.profitMin = Math.min(...profits) - padding
-    this.profitMax = Math.max(...profits) + padding
-    this.profitRange = this.profitMax - this.profitMin
     let step = 0.01
     for (const _ of range(100)) {
-      if (this.profitRange > 10 * step) step *= 5
+      if (this.profitRange > 20 * step) step *= 5
       else break
-      if (this.profitRange > 10 * step) step *= 2
+      if (this.profitRange > 20 * step) step *= 2
       else break
     }
     const context = this.renderer.context
@@ -93,7 +93,7 @@ export class ProfitGraph {
     context.beginPath()
     const levels = []
     let level = Math.ceil(this.profitMin / step) * step
-    for (const _ of range(10)) {
+    for (const _ of range(20)) {
       const scale = (level - this.profitMin) / this.profitRange
       const y = this.y + scale * this.height
       const x0 = this.x

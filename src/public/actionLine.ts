@@ -41,8 +41,9 @@ export class ActionLine {
     context.strokeStyle = 'black'
     context.fillStyle = 'black'
     context.beginPath()
-    range(0, purchaseMax).forEach(i => {
-      const x = this.x + i / purchaseMax * this.width
+    const tickCount = 5
+    range(0, tickCount).forEach(i => {
+      const x = this.x + i / tickCount * this.width
       const y0 = this.y
       const y1 = this.y - this.tickLength
       context.moveTo(x, y0)
@@ -52,13 +53,14 @@ export class ActionLine {
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.font = `${this.fontSize}vmin Arial`
-    range(0, purchaseMax).forEach(i => {
-      const x = this.x + i / purchaseMax * this.width
+    range(0, tickCount).forEach(i => {
+      const x = this.x + i / tickCount * this.width
       const y = this.y - this.tickLength - 7 * this.fontSize
+      const purchaseRate = i / tickCount * purchaseMax
       context.save()
       context.translate(x, y)
       context.scale(1, -1)
-      context.fillText(`${i}`, 0, 0)
+      context.fillText(`${purchaseRate.toFixed(1)}`, 0, 0)
       context.restore()
     })
   }
