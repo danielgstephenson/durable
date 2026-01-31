@@ -4,19 +4,30 @@ body {
   overflow: hidden;
 }
 
-#mainDiv {
+#connectDiv {
   display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 5vmin;
+}
+
+#mainDiv {
+  display: none;
   flex-direction: row;
   height: 100vh;
   width: 100vw;
   justify-content: flex-start;
   align-items: flex-start;
-  font-size: 4vmin;
-  padding: 5vmin;
+  font-size: 2.5vmin;
+  padding: 2vmin;
   gap: 2vmin;
 }
 
-#clientDiv {
+#tableDiv {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -33,5 +44,5 @@ body {
 }
 
 button {
-  font-size: 4vmin;
+  font-size: 3vmin;
 }

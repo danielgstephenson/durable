@@ -6,6 +6,7 @@ export class ActionLine {
   x = 15
   y = 10
   width = 70
+  lineWidth = 0.3
   tickLength = 2
   fontSize = 0.3
 
@@ -23,7 +24,7 @@ export class ActionLine {
   drawLine(): void {
     this.renderer.resetContext()
     const context = this.renderer.context
-    context.lineWidth = 0.5
+    context.lineWidth = this.lineWidth
     context.lineCap = 'round'
     context.strokeStyle = 'black'
     context.beginPath()
@@ -37,7 +38,7 @@ export class ActionLine {
     const unitMax = this.renderer.summary.unitMax
     const depreciation = this.renderer.summary.depreciation
     const purchaseMax = unitMax * depreciation
-    context.lineWidth = 0.5
+    context.lineWidth = this.lineWidth
     context.strokeStyle = 'black'
     context.fillStyle = 'black'
     context.beginPath()

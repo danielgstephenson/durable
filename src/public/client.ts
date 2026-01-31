@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client'
-import { Subject } from '../subject'
-import { Summary } from '../experiment'
 import { Renderer } from './renderer'
+import { SubjectSummary } from '../experiment'
 
 export class Client {
   connectDiv: HTMLDivElement
@@ -32,14 +31,18 @@ export class Client {
       }
       this.token = token
     })
+    this.socket.on('invalidId', (id: string) => {
+      console.log('invalidId', id)
+      this.connectDiv.innerHTML = `Invalid id: ${id}`
+    })
     this.socket.on('login', (id: string) => {
       console.log('login', id)
       this.renderer.id = id
       this.connectDiv.style.display = 'none'
       this.instructionDiv.style.display = 'flex'
     })
-    this.socket.on('summary', (summary: Summary) => {
-      this.renderer.subjects = new Map<string, Subject>(summary.subjects)
+    this.socket.on('summary', (summary: SubjectSummary) => {
+      this.renderer.subjects = summary.subjects
       this.renderer.summary = summary
       if (summary.started) {
         this.instructionDiv.style.display = 'none'

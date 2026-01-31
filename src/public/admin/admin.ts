@@ -1,15 +1,21 @@
 import { io } from 'socket.io-client'
 import { Subject } from '../../subject'
-import { Summary } from '../../experiment'
+import { Table } from './table'
+import { AdminSummary } from '../../experiment'
 
 export class Admin {
+  connectDiv: HTMLDivElement
+  mainDiv: HTMLDivElement
   subjectDiv: HTMLDivElement
   startButton: HTMLButtonElement
-  subjects = new Map<string, Subject>()
+  subjects: Subject[] = []
+  table = new Table()
   socket = io()
   token = 0
 
   constructor() {
+    this.connectDiv = document.getElementById('connectDiv') as HTMLDivElement
+    this.mainDiv = document.getElementById('mainDiv') as HTMLDivElement
     this.subjectDiv = document.getElementById('subjectDiv') as HTMLDivElement
     this.startButton = document.getElementById('startButton') as HTMLButtonElement
     this.startButton.onclick = () => { this.start() }
@@ -18,7 +24,10 @@ export class Admin {
 
   setupIo(): void {
     this.socket.on('connect', () => {
+      this.connectDiv.style.display = 'none'
+      this.mainDiv.style.display = 'flex'
       console.log('connect')
+      this.socket.emit('admin')
     })
     this.socket.on('token', (token: number) => {
       if (this.token !== 0 && this.token !== token) {
@@ -28,18 +37,10 @@ export class Admin {
       }
       this.token = token
     })
-    this.socket.on('summary', (summary: Summary) => {
-      this.subjects = new Map<string, Subject>(summary.subjects)
-      const ids = [...this.subjects.keys()]
-      ids.sort((a, b) => Number(a) - Number(b))
-      this.subjectDiv.innerHTML = ''
-      ids.forEach(key => {
-        const row = document.createElement('div')
-        row.style.textAlign = 'right'
-        row.innerHTML = key
-        this.subjectDiv.appendChild(row)
-      })
-      this.subjectDiv.style.userSelect = 'none'
+    this.socket.on('summary', (summary: AdminSummary) => {
+      console.log('summary')
+      this.subjects = summary.subjects
+      this.table.update(this.subjects)
     })
   }
 

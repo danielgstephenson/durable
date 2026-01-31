@@ -3,16 +3,16 @@ import { Subject } from "../subject"
 import { ProfitGraph } from "./profitGraph"
 import { Mouse } from "./mouse"
 import { ActionLine } from "./actionLine"
-import { Summary } from "../experiment"
+import { SubjectSummary } from "../experiment"
 
 export class Renderer {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
-  summary: Summary
+  summary: SubjectSummary
   profitGraph = new ProfitGraph(this)
   actionLine = new ActionLine(this)
   mouse = new Mouse(this)
-  subjects = new Map<string, Subject>()
+  subjects: Subject[] = []
   renderScale = 1
   id = ''
 
@@ -20,6 +20,7 @@ export class Renderer {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
     this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D
     this.summary = {
+      id: '',
       subjects: [],
       unitMax: 0,
       depreciation: 0,

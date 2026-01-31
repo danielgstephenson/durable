@@ -1,32 +1,46 @@
-import { range, sum } from "./math";
+import { Group } from "./group";
+import { range, shuffle } from "./math";
 import { Subject } from "./subject";
 import NanoTimer from 'nanotimer'
 
 export class Experiment {
   timer = new NanoTimer()
   subjects = new Map<string, Subject>()
+  groups = new Map<number, Group>()
   started = false
-  subjectCount = 5
+  busy = false
+  subjectCount = 10
+  groupSize = 5
+  groupCount = 2
+  dt = 0.001
+  time = 0
   unitMax = 10
   depreciation = 0.2
   priceBase = 0
   priceSlope = 0.1
   rentBase = 3
   rentSlope = 0.1
-  time = 0
-  dt = 0.001
-  busy = false
-  price = 0
-  rent = 0
 
   constructor() {
     range(1, this.subjectCount).forEach(i => {
       this.addSubject(`${i}`)
     })
+    range(this.groupCount).forEach(_ => {
+      this.addGroup()
+    })
   }
 
   start(): void {
     this.started = true
+    const subjects = shuffle([...this.subjects.values()])
+    this.groups.forEach((group, groupId) => {
+      range(this.groupSize).forEach(_ => {
+        const subject = subjects.pop()
+        if (subject == null) return
+        group.subjects.push(subject)
+        subject.group = groupId
+      })
+    })
     this.timer.setInterval(() => this.step(), '', `${this.dt}s`)
   }
 
@@ -35,60 +49,67 @@ export class Experiment {
       console.log('busy')
       return
     }
-    const subjects = [...this.subjects.values()]
-    // const cash = subjects.map(subject => subject.cash.toFixed(2))
-    // console.log('cash', cash)
-    subjects.forEach(subject => {
-      if (subject.id === '1') return
-      if (Math.random() > 0.2 * this.dt) return
-      subject.action = Math.random()
-    })
     this.busy = true
-    subjects.forEach(subject => {
-      subject.units *= 1 - this.dt * this.depreciation
-      subject.purchaseRate = subject.action * this.unitMax * this.depreciation
-      subject.units += this.dt * subject.purchaseRate
-    })
-    const totalPurchaseRate = sum(subjects.map(s => s.purchaseRate))
-    this.price = this.priceBase + this.priceSlope * totalPurchaseRate
-    const totalUnits = sum(subjects.map(s => s.units))
-    this.rent = this.rentBase - this.rentSlope * totalUnits
-    subjects.forEach(subject => {
-      const revenue = subject.units * this.rent
-      const cost = subject.purchaseRate * this.price
-      subject.profit = revenue - cost
-      subject.cash += this.dt * subject.profit
-    })
+    this.groups.forEach(group => group.step())
     this.time += this.dt
     this.busy = false
   }
 
   addSubject(id: string): Subject {
-    console.log('addSubject', id)
     const subject = new Subject(id)
     this.subjects.set(id, subject)
     return subject
   }
 
-  summarize(): Summary {
-    return {
-      subjects: [...this.subjects.entries()],
+  addGroup(): Group {
+    const group = new Group(this)
+    const id = this.groups.size + 1
+    this.groups.set(id, group)
+    return group
+  }
+
+  subjectSummary(subject: Subject): SubjectSummary {
+    const summary = {
+      id: subject.id,
+      subjects: [] as Subject[],
       unitMax: this.unitMax,
       depreciation: this.depreciation,
       time: this.time,
-      price: this.price,
-      rent: this.rent,
+      price: 1,
+      rent: 1,
       started: this.started
     }
+    const group = this.groups.get(subject.group)
+    if (group == null) return summary
+    summary.subjects = group.subjects
+    summary.price = group.price
+    summary.rent = group.rent
+    return summary
+  }
+
+  adminSummary(): AdminSummary {
+    const summary = {
+      subjects: [...this.subjects.values()],
+      time: 0,
+      started: this.started
+    }
+    return summary
   }
 }
 
-export type Summary = {
-  subjects: [string, Subject][]
+export type SubjectSummary = {
+  id: string
+  subjects: Subject[]
   unitMax: number
   depreciation: number
   time: number
   price: number
   rent: number
+  started: boolean
+}
+
+export type AdminSummary = {
+  subjects: Subject[]
+  time: number
   started: boolean
 }
